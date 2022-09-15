@@ -119,7 +119,7 @@ static uint32_t print_pkt (struct nfq_data *tb)
 			unsigned int size_tcp = TH_OFF(tcp_hdr)*4; 
 			unsigned char * payload = (unsigned char *)(data + size_ip + size_tcp);
 			unsigned int payload_size = ntohs(ip_hdr->ip_len) - size_ip - size_tcp;
-			if(ntohs(tcp_hdr->th_dport) == 80 && (memcmp(payload, "GET", 3) == 0)){
+			if(ntohs(tcp_hdr->th_dport) == 80 && ((memcmp(payload, "GET", 3) == 0) || (memcmp(payload, "POST", 4) == 0))){
 				int host_size = 0;
 				for(char* c = payload+22; c != NULL; c++){
 					if(*c != 0x0a)
