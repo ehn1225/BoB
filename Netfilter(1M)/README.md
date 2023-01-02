@@ -7,7 +7,14 @@ sudo iptables -A INPUT -j NFQUEUE --queue-num 0<br>
 sudo iptables -A OUTPUT -j NFQUEUE --queue-num 0
 
 <h2>test set</h2>
-mi.com
-test.gilgil.net
-nike.com
+mi.com<br>
+test.gilgil.net<br>
+nike.com<br>
+
+<h2>Test method</h2>
+$wget facebook.com --no-hsts<br>
+--no-hsts 옵션을 이용해서 80번 포트로 요청을 보내게 합니다.
+
+
+
 

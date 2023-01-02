@@ -59,7 +59,7 @@ struct tcp {
 
 int a_start_pos = 0;
 vector <string> blacklist;
-int arr_index[26] = {0, };
+unsigned int arr_index[27] = {0, };
 
 int is_blacklist(string host){
 
@@ -71,26 +71,22 @@ int is_blacklist(string host){
 		end = begin + a_start_pos;
 	}
 	else{
-		int chr_pos = a_start_pos;
-		for(int i = 0; i < (host[0] - 'a'); i++)
-			chr_pos += arr_index[i];
-
-		begin = begin + chr_pos;
-		end = begin + arr_index[host[0] - 'a'];
+		end = begin + arr_index[(host[0] - 'a') + 1];
+		begin = begin + arr_index[host[0] - 'a'];
 	}
 
-	// printf("host : %s\n", host.c_str());
-	// printf("search begin : %s\n", (*begin).c_str());
-	// printf("search end : %s\n", (*end).c_str());
-	// printf("boundary size : %d\n", arr_index[host[0] - 'a']);
+	//printf("host : %s\n", host.c_str());
+	//printf("search begin : %s\n", (*begin).c_str());
+	//printf("search end : %s\n", (*end).c_str());
+	//printf("boundary size : %d\n", arr_index[host[0] - 'a' + 1] - arr_index[host[0] - 'a']);
 	for(it = begin; it != end; it++){
 		trys++;
 		if (((string)*it).compare(0, host.length(), host) == 0){
-			// printf("Try : %d\n", trys);
+			//printf("Try : %d\n", trys);
 			return 1;
 		}
 	}
-	// printf("Try : %d\n", trys);
+	//printf("Try : %d\n", trys);
 	return 0;
 }
 
@@ -162,7 +158,6 @@ static uint32_t print_pkt (struct nfq_data *tb)
 			unsigned char * payload = (unsigned char *)(data + size_ip + size_tcp);
 			unsigned int payload_size = ntohs(ip_hdr->ip_len) - size_ip - size_tcp;
 			if(ntohs(tcp_hdr->th_dport) == 80 && memcmp(payload, "GET", 3) == 0){
-			//if(ntohs(tcp_hdr->th_dport) == 80 && ((memcmp(payload, "GET", 3) == 0) || (memcmp(payload, "POST", 4) == 0))){
 				int host_size = 0;
 				for(unsigned char* c = payload+22; c != NULL; c++){
 					if(*c != 0x0a)
@@ -208,24 +203,20 @@ int main(int argc, char **argv)
 	}
 
 	if (argc == 2){
-		string file_name;
-		file_name = argv[1];
+		string file_name = argv[1];
 		int length = 0;
 		string host;
-		unsigned char* buffer = NULL;
 		ifstream f(file_name, ifstream::binary);
 		if (f) {
 			f.seekg(0, f.end);
 			length = (int)f.tellg();
 			f.seekg(0, f.beg);
 
-			buffer = (unsigned char*)malloc(length);
-
 			while (getline(f, host)){
 				blacklist.push_back(host);
 				if('a' <= host[0])
-					arr_index[host[0] - 'a'] += 1;			
-				}
+					arr_index[host[0] - 'a' + 1] += 1;
+			}
 
 			f.close();
 		}
@@ -244,10 +235,15 @@ int main(int argc, char **argv)
 
 	int tot = 0;
 	for(int i = 0; i < 26; i++){
-		tot += arr_index[i];
+		tot += arr_index[i+1];
 	}
 
 	a_start_pos = blacklist.size() - tot;
+	arr_index[0] = a_start_pos;
+
+	for(int i = 1; i < 27; i++){
+		arr_index[i] = arr_index[i] + arr_index[i-1];
+	}
 
 	printf("opening library handle\n");
 	h = nfq_open();
