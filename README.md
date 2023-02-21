@@ -1,3 +1,2 @@
-# BoB
-BestOfBest_HW
-BoB를 하면서 진행한 과제를 올리는 Repository입니다.
+<h1>Best Of the Best 11th HomeWork Repository</h1>
+BoB 과제 기록용 Repository입니다.
