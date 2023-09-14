@@ -14,6 +14,7 @@
 - n, e, d 순으로 출력
 
 ## Reference
+- [RSA 암호화 알고리즘](https://ko.wikipedia.org/wiki/RSA_%EC%95%94%ED%98%B8#%ED%82%A4%EC%9D%98_%EC%83%9D%EC%84%B1)
 - [OpenSSL](https://www.openssl.org/)
 - [Miller–Rabin test](https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test#Miller%E2%80%93Rabin_test)
 - [Modular exponentiation Left-to-right binary method](https://en.wikipedia.org/wiki/Modular_exponentiation#Left-to-right_binary_method)
